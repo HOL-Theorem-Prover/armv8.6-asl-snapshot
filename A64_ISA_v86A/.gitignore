@@ -1,0 +1,8 @@
+.HOLMK
+.hollogs
+*Theory.*
+*Script.u*
+armv86a-heap
+lib/sail/sail-heap
+lib/lem/lemheap
+lib/lem/*Lib.u*
