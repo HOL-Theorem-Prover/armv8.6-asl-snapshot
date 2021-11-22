@@ -1,0 +1,18 @@
+LEM_DIR = ../lem
+
+INCLUDES = $(LEM_DIR)
+
+ifdef POLY
+
+HEAP = sail-heap
+EXTRA_CLEANS = $(HEAP) $(HEAP).o
+
+.PHONY: all
+all: $(DEFAULT_TARGETS) $(HEAP)
+
+BASE_HEAP = $(LEM_DIR)/lemheap
+
+$(HEAP): $(BASE_HEAP) $(DEFAULT_TARGETS)
+	$(protect $(HOLDIR)/bin/buildheap) -o $@ -b $(BASE_HEAP) $(DEFAULT_TARGETS)
+
+endif

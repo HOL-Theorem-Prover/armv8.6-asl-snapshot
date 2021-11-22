@@ -163,7 +163,7 @@ val _ = Define `
  ((read_tagS:'a Bitvector_class -> 'a ->('regs,(bitU),'e)monadS)dict_Sail2_values_Bitvector_a addr=  (bindS
   (maybe_failS "nat_of_bv" (nat_of_bv 
   dict_Sail2_values_Bitvector_a addr)) (\ addr . 
-  readS (\ s .  option_CASE (FLOOKUP s.tagstate addr) B0 I))))`;
+  readS (\ s .  option_CASE (FLOOKUP s.tagstate (addr MOD (( 2 : num) **( 64 : num)))) B0 I))))`;
 
 
 (* Read bytes from memory and return in little endian order *)
@@ -171,8 +171,12 @@ val _ = Define `
 val _ = Define `
  ((get_mem_bytes:num -> num -> 'regs sequential_state ->(((bitU)list)list#bitU)option) addr sz s=
    (let addrs = (GENLIST (\ n .  addr + n) sz) in  
-  let read_byte = (\ s addr .  FLOOKUP s.memstate addr) in
-  let read_tag = (\ s addr .  option_CASE (FLOOKUP s.tagstate addr) B0 I) in
+  let read_byte = (\ s addr .  FLOOKUP s.memstate
+                                 (addr MOD (( 2 : num) ** ( 64 : num)))) in
+  let read_tag = (\ s addr .  option_CASE
+                                (FLOOKUP s.tagstate
+                                   (addr MOD (( 2 : num) ** ( 64 : num)))) 
+                              B0 I) in
   OPTION_MAP
     (\ mem_val .  (mem_val, FOLDL and_bit B1 (MAP (read_tag s) addrs)))
     (just_list (MAP (read_byte s) addrs))))`;
@@ -226,9 +230,16 @@ val _ = Define `
    (let addrs = (GENLIST (\ n .  addr + n) sz) in
   let a_v = (lem_list$list_combine addrs v) in  
   let write_byte = (\mem p .  (case (mem ,p ) of
-                                  ( mem , (addr, v) ) =>mem |+ (addr, v)
+                                  ( mem , (addr, v) ) =>mem |+ ((addr MOD
+                                                                   ((
+                                                                     2 : num)
+                                                                    **
+                                                                    (
+                                                                     64 : num))), 
+                                                        v)
                               )) in
-  let write_tag = (\ mem addr . mem |+ (addr, tag)) in
+  let write_tag = (\ mem addr . mem |+ ((addr MOD (( 2 : num) ** ( 64 : num))), 
+                                tag)) in
   ( s with<| memstate := (FOLDL write_byte s.memstate a_v);
   tagstate := (FOLDL write_tag s.tagstate addrs) |>)))`;
 
@@ -358,7 +369,7 @@ val _ = Define `
          )))`;
 
 
-(*val prerr_results : forall 'a 'e 's. SetType 's => (result 'a 'e * 's) -> unit*)
+(*val prerr_results : forall 'a 'e 's. (result 'a 'e * 's) -> unit*)
 val _ = Define `
  ((prerr_results:('a,'e)result#'s -> unit) rs=
    (let _ = ((\p .  (case (p ) of ( (r, _) ) => let _ = (prerr_endline (show_result r)) in ()  )) rs) in
