@@ -111,7 +111,7 @@ val _ = Define `
       leastFixedPointUnbounded f x =
         if f x ⊆ x then x else leastFixedPointUnbounded f (f x ∪ x)
     Not used in the snapshot from the sail-arm repository
-    ⇒ redefine in terms of whileTheory.WHILE:
+    ⇒ redefine in terms of WhileTheory.WHILE:
 *)
 Definition leastFixedPointUnbounded_alt_def[nocompute]:
   leastFixedPointUnbounded f x = WHILE (λx. ¬ (f x ⊆ x)) (λx. f x ∪ x) x
@@ -122,7 +122,7 @@ Theorem leastFixedPointUnbounded_def[compute]:
     if f x ⊆ x then x else leastFixedPointUnbounded f (f x ∪ x)
 Proof
   rw[Once leastFixedPointUnbounded_alt_def] >>
-  once_rewrite_tac[whileTheory.WHILE] >>
+  once_rewrite_tac[WhileTheory.WHILE] >>
   fs[GSYM leastFixedPointUnbounded_alt_def]
 QED
 

@@ -1284,7 +1284,7 @@ val _ = Lib.with_flag (computeLib.auto_import_definitions, false) Defn.save_defn
   * sail2_valuesTheory.while_def : α -> (α -> bool) -> (α -> α) -> α
       while vars cond body =
         if cond vars then while (body vars) cond body else vars
-    ⇒ redefine in terms of whileTheory.WHILE:
+    ⇒ redefine in terms of WhileTheory.WHILE:
 *)
 Definition while_alt_def[nocompute]:
   while vars cond body = WHILE cond body vars
@@ -1296,7 +1296,7 @@ Theorem while_def[compute]:
       if cond vars then while (body vars) cond body else vars
 Proof
   rw[Once while_alt_def] >>
-  rw[Once whileTheory.WHILE] >> fs[GSYM while_alt_def]
+  rw[Once WhileTheory.WHILE] >> fs[GSYM while_alt_def]
 QED
 
 (*
