@@ -13,6 +13,6 @@ all: $(DEFAULT_TARGETS) $(HEAP)
 BASE_HEAP = $(LEM_DIR)/lemheap
 
 $(HEAP): $(BASE_HEAP) $(DEFAULT_TARGETS)
-	$(protect $(HOLDIR)/bin/buildheap) -o $@ -b $(BASE_HEAP) $(DEFAULT_TARGETS)
+	$(protect $(HOLDIR)/bin/hol) buildheap -o $@ -b $(BASE_HEAP) $(DEFAULT_TARGETS)
 
 endif
