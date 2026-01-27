@@ -10,5 +10,5 @@ all: $(HOLHEAP_NAME)
 
 $(HOLHEAP_NAME): $(DEPS)
 	rm -f $(HOLHEAP_NAME)
-	$(protect $(HOLDIR)/bin/buildheap) -o $@ $(BARE_DEPS)
+	$(protect $(HOLDIR)/bin/hol) buildheap -o $@ $(BARE_DEPS)
 endif
